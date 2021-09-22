@@ -15,21 +15,32 @@
 <h2>${date}</h2>
 <h1>${path}</h1>
 <hr width="300px" align="left">
-<a href="files?path=${pidoras}">Вверх</a>
-<h4>
-    Файл:
+<a href="files?path=${pathAdv}">Вверх</a>
+<table cellspacing="7">
+    <tr>
+        <th>Файл</th>
+        <th>Размер</th>
+    </tr>
     <c:forEach var="r" items="${files}">
-        <p>
+        <tr>
+            <td>
+                <c:if test="${!r.isDirectory()}">
+                    <span>📝</span>
+                    <a href = "download?path=${r.getPath().replace('\\','/')}">${r.getName()}</a>
+                </c:if>
+                <c:if test="${r.isDirectory()}">
+                    <span>📂</span>
+                    <a href = "files?path=${r.getPath().replace('\\','/')}">${r.getName()}</a>
+                </c:if>
+            </td>
+
+        <td>
             <c:if test="${!r.isDirectory()}">
-                <span>📝</span>
-                <a href = "download?path=${r.getPath().replace('\\','/')}">${r.getName()}</a>
+                ${r.length()} byte
             </c:if>
-            <c:if test="${r.isDirectory()}">
-                <span>📂</span>
-                <a href = "files?path=${r.getPath().replace('\\','/')}">${r.getName()}</a>
-            </c:if>
-        </p>
+        </td>
+    </tr>
     </c:forEach>
-</h4>
+</table>
 </body>
 </html>

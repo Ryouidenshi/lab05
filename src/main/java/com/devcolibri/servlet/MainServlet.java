@@ -7,11 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+import java.util.Random;
 
 @WebServlet(urlPatterns = "/files")
 public class MainServlet extends HttpServlet {
@@ -30,10 +29,16 @@ public class MainServlet extends HttpServlet {
             }
         }
 
-        String pathPidoras = path.substring(0, index);
+        String pathAdv = path.substring(0, index);
+
 
         try {
             File[] files = new File(path).listFiles();
+            ArrayList<Date> dates = new ArrayList<>();
+            for(File file:files) {
+                dates.add(new Date(file.lastModified()));
+            }
+            req.setAttribute("dates", dates);
             req.setAttribute("files", files);
         }
         catch (Exception e) {
@@ -44,7 +49,7 @@ public class MainServlet extends HttpServlet {
         req.setAttribute("name", "Devcolibri");
         req.setAttribute("date", new Date());
         req.setAttribute("path", path);
-        req.setAttribute("pidoras", pathPidoras);
+        req.setAttribute("pathAdv", pathAdv);
         req.getRequestDispatcher("mypage.jsp").forward(req, resp);
     }
 
