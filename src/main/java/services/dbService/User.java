@@ -1,4 +1,4 @@
-package models;
+package services.dbService;
 
 public class User {
     private final String login;

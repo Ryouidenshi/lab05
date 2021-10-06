@@ -1,6 +1,6 @@
 package services;
 
-import models.User;
+import services.dbService.User;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package servlets;
 
-import models.User;
+import services.dbService.User;
 import services.AccountService;
 
 import javax.servlet.ServletException;
