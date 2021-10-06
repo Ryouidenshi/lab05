@@ -15,6 +15,11 @@
 <h2>${date}</h2>
 <h1>${path}</h1>
 <hr width="300px" align="left">
+<form method="POST" action="logout">
+    <div>
+        <input type="submit" value="Выйти из аккаунта">
+    </div>
+</form>
 <a href="files?path=${pathAdv}">Вверх</a>
 <table cellspacing="7">
     <tr>

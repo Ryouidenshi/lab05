@@ -1,4 +1,7 @@
-package com.devcolibri.servlet;
+package servlets;
+
+import models.User;
+import services.AccountService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,31 +13,45 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
-import java.util.Random;
 
 @WebServlet(urlPatterns = "/files")
 public class MainServlet extends HttpServlet {
+
+    AccountService accountService = new AccountService();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        Map<String, String[]> params = req.getParameterMap();
-        String path = params.get("path")[0] + "/";
-        char[] pathChars = path.toCharArray();
-        int index = 0;
-
-        for(int i = pathChars.length-2; i > 0; i--) {
-            if(pathChars[i] == '/') {
-                index = i;
-                break;
-            }
+        String userName = "";
+        try {
+            User userProfile = accountService.getUserBySessionId(req.getSession().getId());
+            userName = userProfile.getLogin();
+        } catch (RuntimeException exception) {
+            resp.sendRedirect("/login");
+            return;
         }
 
-        String pathAdv = path.substring(0, index);
+        String homeFolder = "C:/Users/" + userName;
+
+        Map<String, String[]> params = req.getParameterMap();
+        String path = "";
+        try {
+            path = params.get("path")[0].replace('\\', '/');
+        } catch (Exception ignored) { }
+
+        if (!path.startsWith(homeFolder)) {
+            System.out.println("hf: " + homeFolder);
+            System.out.println("path: " + path);
+            path = homeFolder;
+        }
+
+        String pathAdv = path.substring(0, path.lastIndexOf('/'));
 
 
         try {
             File[] files = new File(path).listFiles();
             ArrayList<Date> dates = new ArrayList<>();
+            assert files != null;
             for(File file:files) {
                 dates.add(new Date(file.lastModified()));
             }
