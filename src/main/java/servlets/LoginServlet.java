@@ -1,7 +1,7 @@
 package servlets;
 
-import services.dbService.User;
-import services.AccountService;
+import model.UserProfile;
+import services.AccountServices;
 import services.dbService.DBException;
 import services.dbService.DBService;
 
@@ -15,12 +15,12 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
 
-    AccountService accountService = new AccountService();
+    AccountServices accountService = new AccountServices();
     private DBService dbService = new DBService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = accountService.getUserBySessionId("sessionID-" + req.getRemoteAddr());
+        UserProfile user = accountService.getUserBySessionId("sessionID-" + req.getRemoteAddr());
         if (user != null) {
             resp.sendRedirect("/lab02_war/files");
 
@@ -49,12 +49,8 @@ public class LoginServlet extends HttpServlet {
             req.setAttribute("pass", password);
             req.getRequestDispatcher("login.jsp").forward(req, resp);
         } else {
-            User user = null;
-            try {
-                user = dbService.getUser(login);
-            } catch (DBException e) {
-                e.printStackTrace();
-            }
+            UserProfile user = null;
+            user = dbService.getUser(login);
 
             accountService.addSession(req.getSession().getId(), user);
             resp.sendRedirect("/lab02_war/files");
@@ -62,7 +58,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private boolean checkErrors (HttpServletRequest req, String login, String password) throws
-    DBException, DBException {
+            DBException, DBException {
 
         if (login == null || login.equals("")) {
             req.setAttribute("loginErr", "Поле не заполнено");
@@ -81,4 +77,3 @@ public class LoginServlet extends HttpServlet {
         req.setAttribute("passErr", "");
     }
 }
-
