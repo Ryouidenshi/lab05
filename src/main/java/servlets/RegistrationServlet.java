@@ -2,7 +2,7 @@ package servlets;
 
 import services.dbService.DBException;
 import services.dbService.DBService;
-import services.dbService.User;
+import model.UserProfile;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -43,13 +43,9 @@ public class RegistrationServlet extends HttpServlet {
             req.setAttribute("email", email);
             req.getRequestDispatcher("registration.jsp").forward(req, resp);
         } else {
-            User userProfile = new User(login, password, email);
+            UserProfile userProfile = new UserProfile(login, password, email);
 
-            try {
-                dbService.addUser(userProfile);
-            } catch (DBException e) {
-                e.printStackTrace();
-            }
+            dbService.addUser(userProfile);
             resp.sendRedirect("/lab02_war/login");
         }
     }

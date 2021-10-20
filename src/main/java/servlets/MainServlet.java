@@ -1,7 +1,7 @@
 package servlets;
 
-import services.dbService.User;
-import services.AccountService;
+import model.UserProfile;
+import services.AccountServices;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,15 +17,15 @@ import java.util.Map;
 @WebServlet(urlPatterns = "/files")
 public class MainServlet extends HttpServlet {
 
-    AccountService accountService = new AccountService();
+    AccountServices accountService = new AccountServices();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String userName = "";
         try {
-            User userProfile = accountService.getUserBySessionId(req.getSession().getId());
-            userName = userProfile.getLogin();
+            UserProfile usersDataSetProfile = accountService.getUserBySessionId(req.getSession().getId());
+            userName = usersDataSetProfile.getLogin();
         } catch (RuntimeException exception) {
             resp.sendRedirect("/login");
             return;
